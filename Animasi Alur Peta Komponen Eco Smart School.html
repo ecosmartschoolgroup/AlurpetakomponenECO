@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Animasi Alur Peta Komponen Eco Smart School</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--g:#1F6B3E;--gd:#174F2E;--amber:#F2B705;--ink:#18261D;--muted:#5D6B62;--soft:#F4F7F2;--blue:#4A6FA5;--red:#C62828;--orange:#E08A00}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',system-ui,sans-serif;color:var(--ink);background:#EEF3EF;min-height:100vh}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:14px 22px;background:#fff;border-bottom:1px solid #DDE6DF}
+header h1{font-size:19px;font-weight:800}
+header p{font-size:13px;color:var(--muted)}
+.tabs{display:flex;flex-wrap:wrap;gap:6px}
+.tab{border:1px solid #CBD6CD;background:#fff;border-radius:999px;padding:7px 13px;font:600 13px 'DM Sans';color:var(--muted);cursor:pointer}
+.tab.on{background:var(--g);border-color:var(--g);color:#fff}
+.wrap{padding:14px 18px 18px}
+.stageBox{position:relative;width:100%;overflow:hidden;border-radius:18px;background:#fff;box-shadow:0 2px 10px rgba(20,40,30,.08)}
+#stage{position:absolute;left:0;top:0;width:1600px;height:820px;transform-origin:0 0}
+.zone{position:absolute;border-radius:16px;background:var(--soft);padding:14px}
+.zh{font-size:12px;font-weight:800;letter-spacing:.08em;color:var(--g);text-transform:uppercase}
+.zt{font-size:19px;font-weight:800;margin-top:2px}
+.za{font-size:13px;color:var(--muted);font-style:italic}
+.z4{background:#F2F6FC;border:3px dashed var(--blue)}
+.z4 .zh{color:var(--blue)}
+.c{position:absolute;background:#fff;border:2px solid #9DB8A3;border-radius:12px;padding:9px 11px;transition:transform .35s,box-shadow .35s,border-color .35s,background .35s}
+.c b{display:block;font-size:15px}
+.c span{display:block;font-size:12px;color:#4A564E;margin-top:2px;line-height:1.25}
+.c i{display:block;font-size:11.5px;color:var(--g);margin-top:3px}
+.c.spof{border:3px solid var(--red);background:#FFF5F4}
+.c.warn{border:3px dashed var(--orange);background:#FFFBEF}
+.c .tag{position:absolute;top:-10px;right:10px;font-size:10px;font-weight:800;color:#fff;padding:2px 7px;border-radius:7px;font-style:normal;margin:0}
+.c.spof .tag{background:var(--red)}.c.warn .tag{background:var(--orange)}
+.c.active{transform:scale(1.06);border-color:var(--amber)!important;box-shadow:0 0 0 5px rgba(242,183,5,.35),0 10px 24px rgba(0,0,0,.12);background:#FFFDF2;z-index:5}
+.c.fail{border-color:var(--red)!important;box-shadow:0 0 0 6px rgba(198,40,40,.3);background:#FFECEC;z-index:5}
+.c.dim{opacity:.35}
+svg#lines{position:absolute;left:0;top:0;width:1600px;height:820px;pointer-events:none;overflow:visible}
+.trail{fill:none;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.trail.req{stroke:var(--g)}.trail.res{stroke:#8C979A;stroke-dasharray:9 7}.trail.lookup{stroke:var(--blue);stroke-dasharray:4 6}.trail.fail{stroke:var(--red)}
+.packet{position:absolute;left:0;top:0;z-index:20;pointer-events:none;transform:translate(-50%,-50%)}
+.packet .dot{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:15px;box-shadow:0 4px 14px rgba(0,0,0,.25);border:3px solid #fff}
+.packet .lbl{position:absolute;left:50%;top:36px;transform:translateX(-50%);white-space:nowrap;font-size:12px;font-weight:700;background:var(--ink);color:#fff;padding:3px 8px;border-radius:7px}
+.boom{position:absolute;z-index:21;transform:translate(-50%,-50%);font-size:44px;font-weight:900;color:var(--red);text-shadow:0 0 0 #fff,0 2px 8px rgba(198,40,40,.4);animation:pop .4s ease-out}
+@keyframes pop{from{transform:translate(-50%,-50%) scale(.2);opacity:0}}
+.arrowcol{position:absolute;display:flex;flex-direction:column;align-items:center;gap:26px;font-size:30px;font-weight:800}
+.panel{display:grid;grid-template-columns:1fr auto;gap:14px;margin-top:12px;align-items:stretch}
+.cap{background:#fff;border-radius:16px;padding:16px 20px;box-shadow:0 2px 10px rgba(20,40,30,.08);min-height:118px}
+.cap .meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.pill{border-radius:999px;padding:3px 10px;font-size:11px;letter-spacing:.04em}
+.pill.req{background:#E3F2E6;color:var(--g)}.pill.res{background:#EEF0F1;color:#4A564E}.pill.lookup{background:#E6EEF9;color:var(--blue)}.pill.fail{background:#FDE7E7;color:var(--red)}
+.cap h2{font-size:22px;font-weight:800;margin:6px 0 4px}
+.cap p{font-size:15px;line-height:1.5;color:#2E3A33}
+.cap .note{margin-top:8px;font-size:13px;color:#7A5C00;background:#FFF6D6;border-radius:10px;padding:7px 10px;display:none}
+.ctrl{background:#fff;border-radius:16px;padding:14px;box-shadow:0 2px 10px rgba(20,40,30,.08);display:flex;flex-direction:column;gap:10px;min-width:280px}
+.btns{display:flex;gap:6px}
+.btn{flex:1;border:none;border-radius:10px;padding:10px 0;font:700 14px 'DM Sans';cursor:pointer;background:#EEF3EF;color:var(--ink)}
+.btn.main{background:var(--g);color:#fff;flex:1.6}
+.btn:disabled{opacity:.4;cursor:default}
+.steps{display:flex;gap:5px;flex-wrap:wrap}
+.sd{width:26px;height:26px;border-radius:50%;border:none;background:#EEF3EF;font:700 12px 'DM Sans';color:var(--muted);cursor:pointer}
+.sd.on{background:var(--amber);color:var(--ink)}.sd.done{background:#CFE5D5;color:var(--g)}
+.speed{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:10px;font-size:12.5px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:6px}
+.sw{display:inline-block;width:22px;height:0;border-top:4px solid}
+@media (max-width:900px){.panel{grid-template-columns:1fr}.ctrl{min-width:0}}
+@media (prefers-reduced-motion: reduce){.c{transition:none}}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>Animasi Alur Peta Komponen Eco Smart School</h1><p>Lima zona · perjalanan data setoran · acuan materi Pertemuan 1 dan PRD v1.1</p></div>
+  <div class="tabs" id="tabs"></div>
+</header>
+<div class="wrap">
+  <div class="stageBox" id="box">
+    <div id="stage">
+      <svg id="lines"></svg>
+      <!-- zona -->
+      <div class="zone" style="left:20px;top:20px;width:360px;height:560px"><div class="zh">Zona 1 · Sisi pengguna</div><div class="zt">Rumah pengirim</div><div class="za">tempat permintaan dibuat</div></div>
+      <div class="zone" style="left:450px;top:20px;width:300px;height:560px"><div class="zh">Zona 2 · Jaringan akses</div><div class="zt">Gang kampung</div><div class="za">jalan keluar dari sekolah</div></div>
+      <div class="zone" style="left:820px;top:20px;width:300px;height:560px"><div class="zh">Zona 3 · Interkoneksi</div><div class="zt">Jalan tol</div><div class="za">jalur antarjaringan</div></div>
+      <div class="zone" style="left:1190px;top:20px;width:390px;height:560px"><div class="zh">Zona 5 · Penyedia layanan</div><div class="zt">Gudang &amp; dapur</div><div class="za">data diproses dan disimpan</div></div>
+      <div class="zone z4" style="left:20px;top:605px;width:1560px;height:195px"><div class="zh">Zona 4 · Layanan pendukung — dirujuk di banyak titik, tidak dilewati paket secara langsung</div></div>
+      <div class="arrowcol" style="left:393px;top:270px;width:44px"><span style="color:#1F6B3E">→</span><span style="color:#8C979A">←</span></div>
+      <div class="arrowcol" style="left:763px;top:270px;width:44px"><span style="color:#1F6B3E">→</span><span style="color:#8C979A">←</span></div>
+      <div class="arrowcol" style="left:1133px;top:270px;width:44px"><span style="color:#1F6B3E">→</span><span style="color:#8C979A">←</span></div>
+      <!-- komponen zona 1 -->
+      <div class="c" id="kartu" style="left:40px;top:118px;width:320px"><b>Kartu RFID siswa / Kartu Kelas</b><span>Identitas penyetor di station</span><i>kartu pengenal</i></div>
+      <div class="c spof" id="station" style="left:40px;top:222px;width:320px"><em class="tag">SPOF</em><b>Smart Waste Station WS-SMK-01</b><span>ESP32, RC522, 3 load cell + HX711, 3 HC-SR04, LED, buzzer</span><i>timbangan pintar di pos jaga</i></div>
+      <div class="c" id="ponsel" style="left:40px;top:345px;width:320px"><b>Ponsel + aplikasi AppSheet</b><span>Siswa, Eco Ranger, guru, admin</span><i>formulir pesanan</i></div>
+      <div class="c" id="tablet" style="left:40px;top:449px;width:320px"><b>Tablet guru / layar station</b><span>Mode Kelas TK–SD; layar hasil transaksi</span><i>papan pengumuman kelas</i></div>
+      <!-- zona 2 -->
+      <div class="c spof" id="wifi" style="left:470px;top:118px;width:260px"><em class="tag">SPOF</em><b>Wi-Fi &amp; router sekolah</b><span>Satu-satunya jalur station ke internet</span><i>satpam kompleks</i></div>
+      <div class="c" id="modem" style="left:470px;top:245px;width:260px"><b>Modem / jalur fiber</b><span>Membawa data sekolah ke operator</span><i>gang ke jalan besar</i></div>
+      <div class="c" id="seluler" style="left:470px;top:360px;width:260px"><b>Data seluler / BTS</b><span>Jalur ponsel di luar Wi-Fi sekolah</span><i>menara seluler</i></div>
+      <!-- zona 3 -->
+      <div class="c" id="isp" style="left:840px;top:118px;width:260px"><b>ISP sekolah &amp; seluler</b><span>Memberi IP, menyalurkan trafik</span><i>jalan tol</i></div>
+      <div class="c" id="ixp" style="left:840px;top:232px;width:260px"><b>IXP</b><span>Pertukaran trafik antaroperator</span><i>simpang susun</i></div>
+      <div class="c" id="backbone" style="left:840px;top:346px;width:260px"><b>Backbone &amp; kabel laut</b><span>Jalur besar menuju jaringan Google</span><i>jembatan antarpulau</i></div>
+      <!-- zona 5 -->
+      <div class="c spof" id="script" style="left:1210px;top:118px;width:350px"><em class="tag">SPOF</em><b>Google Apps Script (/exec)</b><span>Validasi token, hitung poin, tulis Setoran; selalu membalas HTTP 200 (G-01)</span><i>dapur pengolah pesanan</i></div>
+      <div class="c spof" id="sheets" style="left:1210px;top:240px;width:350px"><em class="tag">SPOF</em><b>Google Sheets (database)</b><span>Tab Pengguna, Kelas, JenisSampah, Setoran</span><i>buku besar</i></div>
+      <div class="c" id="appsheet" style="left:1210px;top:347px;width:350px"><b>AppSheet</b><span>Platform aplikasi empat peran</span><i>etalase toko</i></div>
+      <div class="c warn" id="email" style="left:1210px;top:450px;width:350px"><em class="tag">RAWAN</em><b>Email notifikasi tong penuh</b><span>Satu penerima tetap, kuota harian (G-05)</span><i>kurir pesan</i></div>
+      <!-- zona 4 -->
+      <div class="c" id="dns" style="left:40px;top:650px;width:285px"><b>DNS</b><span>script.google.com jadi alamat IP</span><i>buku alamat</i></div>
+      <div class="c" id="bgp" style="left:345px;top:650px;width:285px"><b>Routing BGP</b><span>Memilih rute antarjaringan</span><i>papan petunjuk arah</i></div>
+      <div class="c warn" id="tls" style="left:650px;top:650px;width:285px"><em class="tag">RAWAN</em><b>TLS / HTTPS</b><span>Station memakai setInsecure (G-03)</span><i>amplop bersegel</i></div>
+      <div class="c spof" id="token" style="left:955px;top:650px;width:285px"><em class="tag">SPOF</em><b>Token station</b><span>Satu token tertanam di kode (G-03)</span><i>kunci gudang bersama</i></div>
+      <div class="c" id="login" style="left:1260px;top:650px;width:300px"><b>Login Google sekolah</b><span>Autentikasi pengguna (FR-LG-01)</span><i>kartu tanda pengenal</i></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="cap">
+      <div class="meta"><span id="stepNo">Langkah 1</span><span class="pill" id="kind">permintaan</span><span id="zoneLbl"></span></div>
+      <h2 id="capTitle"></h2>
+      <p id="capText"></p>
+      <div class="note" id="capNote"></div>
+    </div>
+    <div class="ctrl">
+      <div class="btns"><button class="btn" id="prev" aria-label="Langkah sebelumnya">◀</button><button class="btn main" id="play">❚❚ Jeda</button><button class="btn" id="next" aria-label="Langkah berikutnya">▶</button><button class="btn" id="again" aria-label="Ulangi skenario">↺</button></div>
+      <div class="steps" id="steps"></div>
+      <label class="speed">Kecepatan <input type="range" id="speed" min="0.5" max="2" step="0.25" value="1"><span id="spv">1×</span></label>
+    </div>
+  </div>
+  <div class="legend">
+    <span><i class="sw" style="border-color:#1F6B3E"></i>Permintaan</span>
+    <span><i class="sw" style="border-color:#8C979A;border-top-style:dashed"></i>Respons</span>
+    <span><i class="sw" style="border-color:#4A6FA5;border-top-style:dotted"></i>Merujuk zona 4</span>
+    <span><i class="sw" style="border-color:#C62828"></i>Gagal</span>
+    <span>Kotak merah = SPOF · kotak oranye bergaris = rawan</span>
+  </div>
+</div>
+
+<script>
+// ---------- skenario (alur PRD Bab 4.1–4.3, temuan G-01, G-05, G-06) ----------
+const S = {
+  iot: { name: 'Setoran lewat station', icon: '📦', steps: [
+    { path: ['kartu', 'station'], kind: 'req', zone: 'Zona 1', lbl: 'kartu + 0,35 kg', title: 'Kartu ditempel', text: 'Siswa menempelkan kartu (buzzer 80 ms), menekan tombol Anorganik, lalu membuang botol. ESP32 menimbang selisih berat: 0,35 kg, dan mengukur isi tong.' },
+    { path: ['station', 'dns', 'station'], kind: 'lookup', zone: 'Zona 4', lbl: 'cari alamat', title: 'Cari alamat', text: 'Sebelum mengirim, ESP32 bertanya ke DNS: di mana alamat script.google.com? DNS menjawab dengan alamat IP, seperti buku alamat.' },
+    { path: ['station', 'wifi', 'modem'], kind: 'req', zone: 'Zona 2', lbl: 'JSON setoran', title: 'Keluar sekolah', text: 'Paket berisi data setoran {kartu, jenis, berat_kg, isi_persen} keluar lewat Wi-Fi dan router sekolah, lalu modem fiber.' },
+    { path: ['modem', 'isp', 'ixp'], kind: 'req', zone: 'Zona 3', lbl: 'JSON setoran', title: 'Masuk jalan tol', text: 'ISP sekolah meneruskan paket. Bila perlu, trafik bertukar dengan operator lain di IXP, seperti simpang susun.' },
+    { path: ['ixp', 'bgp', 'backbone'], kind: 'lookup', zone: 'Zona 3–4', lbl: 'pilih rute', title: 'Pilih rute', text: 'Router memilih jalan hop demi hop berdasarkan informasi BGP, lalu paket melaju lewat backbone menuju jaringan Google.' },
+    { path: ['backbone', 'tls', 'token', 'script'], kind: 'req', zone: 'Zona 4 → 5', lbl: 'HTTPS POST', title: 'Segel amplop dan cek kunci', text: 'Koneksi HTTPS dibuat dan Apps Script memeriksa token station.', note: 'Rawan: station belum memeriksa sertifikat server (setInsecure) dan memakai satu token yang tertanam di kode (G-03).' },
+    { path: ['script', 'sheets'], kind: 'req', zone: 'Zona 5', lbl: '+4 poin', title: 'Diproses di dapur', text: 'Apps Script mencari kartu dan jenis, menghitung poin 0,35 × 10 = 3,5 → 4, lalu menulis baris Setoran berstatus Terverifikasi, sumber IoT.' },
+    { path: ['sheets', 'script', 'backbone', 'isp', 'modem', 'wifi', 'station'], kind: 'res', zone: 'Zona 5 → 1', lbl: 'ok · +4 poin', title: 'Respons kembali', text: 'Respons {"ok":true,"kelas":"XI RPL 1","poin":4} menempuh jalur sebaliknya. Station membunyikan buzzer 150 ms tanda sukses.' },
+    { path: ['sheets', 'appsheet', 'ponsel'], kind: 'res', zone: 'Zona 5 → 1', lbl: 'Beranda diperbarui', title: 'Tampil di aplikasi', text: 'AppSheet membaca tab Setoran. Dalam waktu ≤ 1 menit, setoran dan poin kelas tampil di Beranda siswa (AC-IN-04).' }
+  ]},
+  manual: { name: 'Setoran manual', icon: '📱', steps: [
+    { path: ['ponsel', 'login'], kind: 'lookup', zone: 'Zona 1 → 4', lbl: 'masuk', title: 'Masuk dengan akun sekolah', text: 'Siswa membuka aplikasi dan masuk dengan akun Google sekolah. Peran dibaca otomatis dari tab Pengguna.' },
+    { path: ['login', 'ponsel'], kind: 'res', zone: 'Zona 4 → 1', lbl: 'peran: Siswa', title: 'Peran dikenali', text: 'Siswa diarahkan ke Beranda, lalu mengisi Setor Sampah: jenis, berat, dan foto opsional. Pratinjau poin muncul langsung.' },
+    { path: ['ponsel', 'seluler', 'isp', 'backbone'], kind: 'req', zone: 'Zona 1 → 3', lbl: 'Simpan Setoran', title: 'Dikirim lewat jaringan', text: 'Data dikirim lewat Wi-Fi sekolah atau data seluler, diteruskan ISP dan backbone menuju layanan Google.' },
+    { path: ['backbone', 'tls', 'appsheet', 'sheets'], kind: 'req', zone: 'Zona 4 → 5', lbl: 'status Menunggu', title: 'Tersimpan, menunggu verifikasi', text: 'AppSheet menulis baris Setoran: sumber Manual, status Menunggu. Poin belum dihitung ke skor kelas (BR-03).' },
+    { path: ['sheets', 'appsheet', 'ponsel'], kind: 'res', zone: 'Zona 5 → 1', lbl: 'antrean Eco Ranger', title: 'Masuk antrean Eco Ranger', text: 'Ponsel Eco Ranger menampilkan setoran di tab Menunggu. Eco Ranger memeriksa fisik sampah, bisa mengubah berat atau mengoreksi jenis.' },
+    { path: ['ponsel', 'seluler', 'isp', 'backbone', 'appsheet', 'sheets'], kind: 'req', zone: 'Zona 1 → 5', lbl: 'Verifikasi', title: 'Diverifikasi', text: 'Eco Ranger menekan Verifikasi. Status menjadi Terverifikasi, poin masuk skor kelas, dan peringkat diperbarui.' }
+  ]},
+  penuh: { name: 'Tong penuh', icon: '🔔', steps: [
+    { path: ['kartu', 'station'], kind: 'req', zone: 'Zona 1', lbl: 'isi 82%', title: 'Tong hampir penuh', text: 'Setelah satu setoran, sensor ultrasonik membaca isi kompartemen Anorganik 82%. LED kompartemen berubah merah.' },
+    { path: ['station', 'wifi', 'modem', 'isp', 'backbone', 'script'], kind: 'req', zone: 'Zona 1 → 5', lbl: 'isi_persen: 82', title: 'Isi tong ikut terkirim', text: 'Setiap setoran station membawa nilai isi_persen ke Apps Script bersama data berat dan jenis.' },
+    { path: ['script', 'email'], kind: 'req', zone: 'Zona 5', lbl: 'isi > 80%', title: 'Email dibuat', text: 'Karena isi di atas 80%, Apps Script mengirim email ke Eco Ranger (BR-06).', note: 'Rawan: versi sekarang mengirim email pada setiap setoran di atas 80% ke satu alamat tetap, sehingga bisa berulang dan menghabiskan kuota (G-05). Perbaikan: satu email per episode penuh.' },
+    { path: ['email', 'backbone', 'isp', 'seluler', 'ponsel'], kind: 'res', zone: 'Zona 5 → 1', lbl: 'email + banner', title: 'Eco Ranger diberi tahu', text: 'Email dan banner "Tong Anorganik WS-SMK-01 penuh" tampil di ponsel Eco Ranger. Setelah dikosongkan, Eco Ranger menekan "Sudah dikosongkan".' }
+  ]},
+  wifi: { name: 'SPOF: Wi-Fi putus', icon: '📡', steps: [
+    { path: ['kartu', 'station'], kind: 'req', zone: 'Zona 1', lbl: 'kartu + 0,35 kg', title: 'Setoran dibuat seperti biasa', text: 'Siswa menyetor botol 0,35 kg. Station siap mengirim data ke Apps Script.' },
+    { path: ['station', 'wifi'], kind: 'fail', zone: 'Zona 2', lbl: 'Wi-Fi putus', title: 'Satu jalan terputus', text: 'Wi-Fi sekolah adalah satu-satunya jalur station. Saat Wi-Fi putus, paket tidak bisa keluar sekolah.', note: 'Temuan G-06: belum ada antrean offline, dan station menunggu Wi-Fi tanpa batas saat dinyalakan. Setoran ini hilang dan siswa tidak mendapat poin.' },
+    { path: ['station', 'tablet'], kind: 'res', zone: 'Zona 1', lbl: 'buzzer 600 ms', title: 'Siswa mendapat tanda gagal', text: 'Station membunyikan nada gagal. Sebagai cadangan, siswa masih bisa menyetor manual lewat aplikasi bila ponselnya terhubung data seluler.', note: 'Perbaikan sesuai PRD: antrean transaksi di memori flash (≥ 100 transaksi), kirim ulang otomatis dengan ID unik saat Wi-Fi pulih (AC-IO-09).' }
+  ]},
+  kartu: { name: 'Kartu belum terdaftar (G-01)', icon: '💳', steps: [
+    { path: ['kartu', 'station'], kind: 'req', zone: 'Zona 1', lbl: 'kartu baru', title: 'Kartu asing ditempel', text: 'Siswa menempelkan kartu yang belum didaftarkan Admin, lalu membuang sampah.' },
+    { path: ['station', 'wifi', 'modem', 'isp', 'backbone', 'script'], kind: 'req', zone: 'Zona 1 → 5', lbl: 'JSON setoran', title: 'Data sampai ke Apps Script', text: 'Perjalanan melewati zona 2 dan 3 berjalan normal: jaringan tidak tahu apakah kartunya terdaftar.' },
+    { path: ['script', 'sheets', 'script'], kind: 'fail', zone: 'Zona 5', lbl: 'kartu tidak ada', title: 'Kartu tidak ditemukan', text: 'Apps Script mencari kartu di tab Pengguna dan tidak menemukannya. Tidak ada baris Setoran yang ditulis.' },
+    { path: ['script', 'backbone', 'isp', 'modem', 'wifi', 'station'], kind: 'res', zone: 'Zona 5 → 1', lbl: 'HTTP 200 · ok:false', title: 'Kegagalan diam-diam', text: 'Respons berisi ok:false, tetapi kode HTTP-nya tetap 200. Firmware Sprint 1 hanya membaca kode 200, sehingga berbunyi sukses.', note: 'Contoh kegagalan parsial (temuan T4/G-01): siswa mengira poinnya tercatat. Perbaikan Sprint 2: firmware membaca isi JSON dan berbunyi 600 ms bila ok = false.' }
+  ]}
+};
+const KIND = { req: ['permintaan', 'req', '#1F6B3E', '➜'], res: ['respons', 'res', '#8C979A', '↩'], lookup: ['merujuk zona 4', 'lookup', '#4A6FA5', '?'], fail: ['gagal', 'fail', '#C62828', '!'] };
+
+// ---------- elemen ----------
+const stage = document.getElementById('stage'), box = document.getElementById('box'), svg = document.getElementById('lines');
+const $ = id => document.getElementById(id);
+function fit() { const s = box.clientWidth / 1600; stage.style.transform = `scale(${s})`; box.style.height = (820 * s) + 'px'; }
+window.addEventListener('resize', fit); fit();
+function center(id) { const e = $(id); return { x: e.offsetLeft + e.offsetWidth / 2, y: e.offsetTop + e.offsetHeight / 2 }; }
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+let scen = 'iot', idx = 0, playing = true, speed = 1, runId = 0, timer = null;
+const packet = document.createElement('div'); packet.className = 'packet'; packet.innerHTML = '<div class="dot"></div><div class="lbl"></div>'; stage.appendChild(packet);
+
+function buildTabs() {
+  const t = $('tabs'); t.innerHTML = '';
+  Object.entries(S).forEach(([k, v]) => { const b = document.createElement('button'); b.className = 'tab' + (k === scen ? ' on' : ''); b.textContent = v.icon + ' ' + v.name; b.onclick = () => { scen = k; idx = 0; buildTabs(); go(); }; t.appendChild(b); });
+}
+function buildSteps() {
+  const st = $('steps'); st.innerHTML = '';
+  S[scen].steps.forEach((_, i) => { const b = document.createElement('button'); b.className = 'sd' + (i === idx ? ' on' : i < idx ? ' done' : ''); b.textContent = i + 1; b.setAttribute('aria-label', 'Langkah ' + (i + 1)); b.onclick = () => { idx = i; go(); }; st.appendChild(b); });
+}
+function clearMarks() { document.querySelectorAll('.c').forEach(c => c.classList.remove('active', 'fail', 'dim')); document.querySelectorAll('.boom').forEach(b => b.remove()); }
+
+// gambar jejak langkah-langkah sebelumnya (tipis) + langkah aktif
+function drawTrails(upto) {
+  svg.innerHTML = '';
+  S[scen].steps.slice(0, upto + 1).forEach((s, i) => {
+    const pts = s.path.map(center);
+    const p = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+    p.setAttribute('points', pts.map(q => q.x + ',' + q.y).join(' '));
+    p.setAttribute('class', 'trail ' + s.kind); p.style.opacity = i === upto ? 0.9 : 0.25;
+    if (i === upto) { const len = pts.reduce((a, q, j) => j ? a + Math.hypot(q.x - pts[j - 1].x, q.y - pts[j - 1].y) : 0, 0); p.style.strokeDasharray = s.kind === 'req' || s.kind === 'fail' ? len : p.style.strokeDasharray; p.dataset.len = len; }
+    svg.appendChild(p);
+  });
+}
+
+async function animateStep(my) {
+  const s = S[scen].steps[idx]; const K = KIND[s.kind];
+  clearMarks(); buildSteps(); drawTrails(idx);
+  $('stepNo').textContent = `Langkah ${idx + 1} dari ${S[scen].steps.length}`;
+  const kp = $('kind'); kp.textContent = K[0]; kp.className = 'pill ' + K[1];
+  $('zoneLbl').textContent = s.zone; $('capTitle').textContent = s.title; $('capText').textContent = s.text;
+  const n = $('capNote'); n.style.display = s.note ? 'block' : 'none'; n.textContent = s.note || '';
+  document.querySelectorAll('.c').forEach(c => { if (!s.path.includes(c.id)) c.classList.add('dim'); });
+  const dot = packet.querySelector('.dot'); dot.style.background = K[2]; dot.style.color = '#fff'; dot.textContent = K[3];
+  packet.querySelector('.lbl').textContent = s.lbl; packet.style.display = 'block';
+  const pts = s.path.map(center);
+  packet.style.left = pts[0].x + 'px'; packet.style.top = pts[0].y + 'px';
+  $(s.path[0]).classList.add('active');
+  const active = svg.lastChild;
+  for (let i = 1; i < pts.length; i++) {
+    if (my !== runId) return;
+    const a = pts[i - 1], b = pts[i];
+    const isFail = s.kind === 'fail' && i === pts.length - 1 && s.path[i] === 'wifi';
+    const dur = reduce ? 1 : (Math.hypot(b.x - a.x, b.y - a.y) * 2.2 + 350) / speed;
+    const target = isFail ? { x: a.x + (b.x - a.x) * 0.55, y: a.y + (b.y - a.y) * 0.55 } : b;
+    const anim = packet.animate([{ left: a.x + 'px', top: a.y + 'px' }, { left: target.x + 'px', top: target.y + 'px' }], { duration: dur, easing: 'ease-in-out', fill: 'forwards' });
+    if (active && active.dataset.len && (s.kind === 'req' || s.kind === 'fail')) {
+      const before = pts.slice(0, i).reduce((acc, q, j) => j ? acc + Math.hypot(q.x - pts[j - 1].x, q.y - pts[j - 1].y) : 0, 0);
+      const seg = Math.hypot(b.x - a.x, b.y - a.y);
+      active.animate([{ strokeDashoffset: active.dataset.len - before }, { strokeDashoffset: active.dataset.len - before - seg * (isFail ? 0.55 : 1) }], { duration: dur, fill: 'forwards' });
+    }
+    await anim.finished.catch(() => {});
+    if (my !== runId) return;
+    packet.style.left = target.x + 'px'; packet.style.top = target.y + 'px';
+    if (isFail) { $(s.path[i]).classList.add('fail'); const x = document.createElement('div'); x.className = 'boom'; x.textContent = '✕'; x.style.left = target.x + 'px'; x.style.top = target.y + 'px'; stage.appendChild(x); }
+    else { $(s.path[i]).classList.add(s.kind === 'fail' && i === pts.length - 1 ? 'fail' : 'active'); }
+  }
+  if (s.kind === 'fail' && !s.path.includes('wifi')) $(s.path[s.path.length - 1]).classList.add('fail');
+}
+
+function schedule(my) {
+  clearTimeout(timer);
+  if (!playing) return;
+  const s = S[scen].steps[idx];
+  const read = Math.max(2600, (s.text.length + (s.note || '').length) * 38) / speed;
+  timer = setTimeout(() => { if (my !== runId || !playing) return; if (idx < S[scen].steps.length - 1) { idx++; go(); } else { setPlay(false); } }, read);
+}
+async function go() { const my = ++runId; clearTimeout(timer); packet.getAnimations().forEach(a => a.cancel()); await animateStep(my); if (my === runId) schedule(my); updBtns(); }
+function setPlay(v) { playing = v; $('play').textContent = v ? '❚❚ Jeda' : '▶ Putar'; if (v) { if (idx >= S[scen].steps.length - 1 && !timer) { } schedule(runId); } else clearTimeout(timer); }
+function updBtns() { $('prev').disabled = idx === 0; $('next').disabled = idx >= S[scen].steps.length - 1; }
+$('play').onclick = () => { if (!playing && idx >= S[scen].steps.length - 1) { idx = 0; playing = true; $('play').textContent = '❚❚ Jeda'; go(); return; } setPlay(!playing); };
+$('next').onclick = () => { if (idx < S[scen].steps.length - 1) { idx++; go(); } };
+$('prev').onclick = () => { if (idx > 0) { idx--; go(); } };
+$('again').onclick = () => { idx = 0; playing = true; $('play').textContent = '❚❚ Jeda'; go(); };
+$('speed').oninput = e => { speed = +e.target.value; $('spv').textContent = speed + '×'; };
+document.addEventListener('keydown', e => { if (e.key === 'ArrowRight') $('next').click(); if (e.key === 'ArrowLeft') $('prev').click(); if (e.key === ' ') { e.preventDefault(); $('play').click(); } });
+buildTabs(); go();
+</script>
+</body>
+</html>
